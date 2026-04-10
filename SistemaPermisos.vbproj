@@ -185,8 +185,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="accessdatabaseengine\insignia.png" />
     <Content Include="Sistemapermisos.accdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

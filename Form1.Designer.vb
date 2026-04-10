@@ -57,16 +57,19 @@ Partial Class Form1
         Me.Label8 = New System.Windows.Forms.Label()
         Me.rbSemanal = New System.Windows.Forms.RadioButton()
         Me.rbMensual = New System.Windows.Forms.RadioButton()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.Label9 = New System.Windows.Forms.Label()
         CType(Me.numHoras, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvPermisos, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SistemapermisosDataSetBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SistemapermisosDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(44, 24)
+        Me.Label1.Location = New System.Drawing.Point(179, 89)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(44, 13)
         Me.Label1.TabIndex = 0
@@ -75,23 +78,23 @@ Partial Class Form1
         'cmbEmpleados
         '
         Me.cmbEmpleados.FormattingEnabled = True
-        Me.cmbEmpleados.Location = New System.Drawing.Point(126, 24)
+        Me.cmbEmpleados.Location = New System.Drawing.Point(236, 89)
         Me.cmbEmpleados.Name = "cmbEmpleados"
         Me.cmbEmpleados.Size = New System.Drawing.Size(233, 21)
         Me.cmbEmpleados.TabIndex = 1
         '
         'txtRUT
         '
-        Me.txtRUT.Location = New System.Drawing.Point(126, 75)
+        Me.txtRUT.Location = New System.Drawing.Point(524, 89)
         Me.txtRUT.Name = "txtRUT"
         Me.txtRUT.ReadOnly = True
-        Me.txtRUT.Size = New System.Drawing.Size(121, 20)
+        Me.txtRUT.Size = New System.Drawing.Size(135, 20)
         Me.txtRUT.TabIndex = 2
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(44, 82)
+        Me.Label2.Location = New System.Drawing.Point(489, 89)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(24, 13)
         Me.Label2.TabIndex = 3
@@ -100,7 +103,7 @@ Partial Class Form1
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(361, 82)
+        Me.Label3.Location = New System.Drawing.Point(676, 89)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(45, 13)
         Me.Label3.TabIndex = 4
@@ -108,24 +111,24 @@ Partial Class Form1
         '
         'txtFuncion
         '
-        Me.txtFuncion.Location = New System.Drawing.Point(456, 79)
+        Me.txtFuncion.Location = New System.Drawing.Point(727, 90)
         Me.txtFuncion.Name = "txtFuncion"
         Me.txtFuncion.ReadOnly = True
-        Me.txtFuncion.Size = New System.Drawing.Size(100, 20)
+        Me.txtFuncion.Size = New System.Drawing.Size(180, 20)
         Me.txtFuncion.TabIndex = 5
         '
         'dtpDiaActual
         '
         Me.dtpDiaActual.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpDiaActual.Location = New System.Drawing.Point(126, 135)
+        Me.dtpDiaActual.Location = New System.Drawing.Point(254, 140)
         Me.dtpDiaActual.Name = "dtpDiaActual"
-        Me.dtpDiaActual.Size = New System.Drawing.Size(121, 20)
+        Me.dtpDiaActual.Size = New System.Drawing.Size(97, 20)
         Me.dtpDiaActual.TabIndex = 6
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(47, 141)
+        Me.Label4.Location = New System.Drawing.Point(179, 147)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(56, 13)
         Me.Label4.TabIndex = 7
@@ -134,7 +137,7 @@ Partial Class Form1
         'dtpDiaPermiso
         '
         Me.dtpDiaPermiso.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpDiaPermiso.Location = New System.Drawing.Point(364, 134)
+        Me.dtpDiaPermiso.Location = New System.Drawing.Point(455, 140)
         Me.dtpDiaPermiso.Name = "dtpDiaPermiso"
         Me.dtpDiaPermiso.Size = New System.Drawing.Size(100, 20)
         Me.dtpDiaPermiso.TabIndex = 8
@@ -142,7 +145,7 @@ Partial Class Form1
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(288, 141)
+        Me.Label5.Location = New System.Drawing.Point(371, 147)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(63, 13)
         Me.Label5.TabIndex = 9
@@ -150,9 +153,8 @@ Partial Class Form1
         '
         'numHoras
         '
-        Me.numHoras.Location = New System.Drawing.Point(601, 134)
+        Me.numHoras.Location = New System.Drawing.Point(679, 139)
         Me.numHoras.Maximum = New Decimal(New Integer() {24, 0, 0, 0})
-        Me.numHoras.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.numHoras.Name = "numHoras"
         Me.numHoras.Size = New System.Drawing.Size(69, 20)
         Me.numHoras.TabIndex = 10
@@ -161,7 +163,7 @@ Partial Class Form1
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(504, 141)
+        Me.Label6.Location = New System.Drawing.Point(584, 146)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(75, 13)
         Me.Label6.TabIndex = 11
@@ -170,7 +172,7 @@ Partial Class Form1
         'rbConSueldo
         '
         Me.rbConSueldo.AutoSize = True
-        Me.rbConSueldo.Location = New System.Drawing.Point(156, 192)
+        Me.rbConSueldo.Location = New System.Drawing.Point(793, 127)
         Me.rbConSueldo.Name = "rbConSueldo"
         Me.rbConSueldo.Size = New System.Drawing.Size(80, 17)
         Me.rbConSueldo.TabIndex = 12
@@ -181,7 +183,7 @@ Partial Class Form1
         'rbSinSueldo
         '
         Me.rbSinSueldo.AutoSize = True
-        Me.rbSinSueldo.Location = New System.Drawing.Point(456, 192)
+        Me.rbSinSueldo.Location = New System.Drawing.Point(793, 150)
         Me.rbSinSueldo.Name = "rbSinSueldo"
         Me.rbSinSueldo.Size = New System.Drawing.Size(76, 17)
         Me.rbSinSueldo.TabIndex = 13
@@ -191,7 +193,7 @@ Partial Class Form1
         '
         'btnGuardar
         '
-        Me.btnGuardar.Location = New System.Drawing.Point(126, 254)
+        Me.btnGuardar.Location = New System.Drawing.Point(213, 182)
         Me.btnGuardar.Name = "btnGuardar"
         Me.btnGuardar.Size = New System.Drawing.Size(75, 23)
         Me.btnGuardar.TabIndex = 14
@@ -200,7 +202,7 @@ Partial Class Form1
         '
         'btnReporte
         '
-        Me.btnReporte.Location = New System.Drawing.Point(343, 253)
+        Me.btnReporte.Location = New System.Drawing.Point(394, 182)
         Me.btnReporte.Name = "btnReporte"
         Me.btnReporte.Size = New System.Drawing.Size(75, 23)
         Me.btnReporte.TabIndex = 15
@@ -209,7 +211,7 @@ Partial Class Form1
         '
         'btnLimpiar
         '
-        Me.btnLimpiar.Location = New System.Drawing.Point(538, 253)
+        Me.btnLimpiar.Location = New System.Drawing.Point(584, 182)
         Me.btnLimpiar.Name = "btnLimpiar"
         Me.btnLimpiar.Size = New System.Drawing.Size(75, 23)
         Me.btnLimpiar.TabIndex = 16
@@ -223,9 +225,9 @@ Partial Class Form1
         Me.dgvPermisos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvPermisos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8})
         Me.dgvPermisos.DataSource = Me.SistemapermisosDataSetBindingSource
-        Me.dgvPermisos.Location = New System.Drawing.Point(12, 299)
+        Me.dgvPermisos.Location = New System.Drawing.Point(12, 228)
         Me.dgvPermisos.Name = "dgvPermisos"
-        Me.dgvPermisos.Size = New System.Drawing.Size(776, 150)
+        Me.dgvPermisos.Size = New System.Drawing.Size(893, 150)
         Me.dgvPermisos.TabIndex = 17
         '
         'Column1
@@ -281,7 +283,7 @@ Partial Class Form1
         'dtpDesde
         '
         Me.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpDesde.Location = New System.Drawing.Point(194, 486)
+        Me.dtpDesde.Location = New System.Drawing.Point(129, 400)
         Me.dtpDesde.Name = "dtpDesde"
         Me.dtpDesde.Size = New System.Drawing.Size(107, 20)
         Me.dtpDesde.TabIndex = 18
@@ -289,7 +291,7 @@ Partial Class Form1
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(88, 486)
+        Me.Label7.Location = New System.Drawing.Point(21, 407)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(100, 13)
         Me.Label7.TabIndex = 19
@@ -298,7 +300,7 @@ Partial Class Form1
         'dtpHasta
         '
         Me.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpHasta.Location = New System.Drawing.Point(470, 486)
+        Me.dtpHasta.Location = New System.Drawing.Point(374, 399)
         Me.dtpHasta.Name = "dtpHasta"
         Me.dtpHasta.Size = New System.Drawing.Size(95, 20)
         Me.dtpHasta.TabIndex = 20
@@ -306,7 +308,7 @@ Partial Class Form1
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(377, 492)
+        Me.Label8.Location = New System.Drawing.Point(264, 406)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(87, 13)
         Me.Label8.TabIndex = 21
@@ -315,7 +317,7 @@ Partial Class Form1
         'rbSemanal
         '
         Me.rbSemanal.AutoSize = True
-        Me.rbSemanal.Location = New System.Drawing.Point(196, 550)
+        Me.rbSemanal.Location = New System.Drawing.Point(510, 399)
         Me.rbSemanal.Name = "rbSemanal"
         Me.rbSemanal.Size = New System.Drawing.Size(105, 17)
         Me.rbSemanal.TabIndex = 22
@@ -326,7 +328,7 @@ Partial Class Form1
         'rbMensual
         '
         Me.rbMensual.AutoSize = True
-        Me.rbMensual.Location = New System.Drawing.Point(364, 550)
+        Me.rbMensual.Location = New System.Drawing.Point(659, 399)
         Me.rbMensual.Name = "rbMensual"
         Me.rbMensual.Size = New System.Drawing.Size(105, 17)
         Me.rbMensual.TabIndex = 23
@@ -334,11 +336,34 @@ Partial Class Form1
         Me.rbMensual.Text = "Reporte mensual"
         Me.rbMensual.UseVisualStyleBackColor = True
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.ErrorImage = Global.SistemaPermisos.My.Resources.Resources.insignia
+        Me.PictureBox1.Image = Global.SistemaPermisos.My.Resources.Resources.insignia
+        Me.PictureBox1.Location = New System.Drawing.Point(24, 26)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(132, 162)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize
+        Me.PictureBox1.TabIndex = 24
+        Me.PictureBox1.TabStop = False
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Myanmar Text", 27.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.Location = New System.Drawing.Point(353, 9)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(345, 65)
+        Me.Label9.TabIndex = 25
+        Me.Label9.Text = "Gestor de Permisos"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(800, 650)
+        Me.ClientSize = New System.Drawing.Size(917, 439)
+        Me.Controls.Add(Me.Label9)
+        Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.rbMensual)
         Me.Controls.Add(Me.rbSemanal)
         Me.Controls.Add(Me.Label8)
@@ -369,6 +394,7 @@ Partial Class Form1
         CType(Me.dgvPermisos, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.SistemapermisosDataSetBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.SistemapermisosDataSet, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -408,4 +434,6 @@ Partial Class Form1
     Friend WithEvents SistemapermisosDataSet As SistemapermisosDataSet
     Friend WithEvents Column7 As DataGridViewTextBoxColumn
     Friend WithEvents Column8 As DataGridViewTextBoxColumn
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents Label9 As Label
 End Class
