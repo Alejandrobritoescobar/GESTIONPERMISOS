@@ -29,12 +29,10 @@ Partial Class Form1
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txtFuncion = New System.Windows.Forms.TextBox()
-        Me.dtpDiaActual = New System.Windows.Forms.DateTimePicker()
+        Me.dtpFechaDesde = New System.Windows.Forms.DateTimePicker()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.dtpDiaPermiso = New System.Windows.Forms.DateTimePicker()
+        Me.dtpFechaHasta = New System.Windows.Forms.DateTimePicker()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.numHoras = New System.Windows.Forms.NumericUpDown()
-        Me.Label6 = New System.Windows.Forms.Label()
         Me.rbConSueldo = New System.Windows.Forms.RadioButton()
         Me.rbSinSueldo = New System.Windows.Forms.RadioButton()
         Me.btnGuardar = New System.Windows.Forms.Button()
@@ -59,11 +57,18 @@ Partial Class Form1
         Me.rbMensual = New System.Windows.Forms.RadioButton()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.Label9 = New System.Windows.Forms.Label()
-        CType(Me.numHoras, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.rbMediaJornadaPM = New System.Windows.Forms.RadioButton()
+        Me.rbMediaJornadaAM = New System.Windows.Forms.RadioButton()
+        Me.rbJornadaCompleta = New System.Windows.Forms.RadioButton()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvPermisos, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SistemapermisosDataSetBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.SistemapermisosDataSet, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox1.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label1
@@ -117,62 +122,44 @@ Partial Class Form1
         Me.txtFuncion.Size = New System.Drawing.Size(180, 20)
         Me.txtFuncion.TabIndex = 5
         '
-        'dtpDiaActual
+        'dtpFechaDesde
         '
-        Me.dtpDiaActual.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpDiaActual.Location = New System.Drawing.Point(254, 140)
-        Me.dtpDiaActual.Name = "dtpDiaActual"
-        Me.dtpDiaActual.Size = New System.Drawing.Size(97, 20)
-        Me.dtpDiaActual.TabIndex = 6
+        Me.dtpFechaDesde.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpFechaDesde.Location = New System.Drawing.Point(254, 140)
+        Me.dtpFechaDesde.Name = "dtpFechaDesde"
+        Me.dtpFechaDesde.Size = New System.Drawing.Size(97, 20)
+        Me.dtpFechaDesde.TabIndex = 6
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(179, 147)
+        Me.Label4.Location = New System.Drawing.Point(179, 142)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(56, 13)
+        Me.Label4.Size = New System.Drawing.Size(69, 13)
         Me.Label4.TabIndex = 7
-        Me.Label4.Text = "Dia Actual"
+        Me.Label4.Text = "Fecha desde"
         '
-        'dtpDiaPermiso
+        'dtpFechaHasta
         '
-        Me.dtpDiaPermiso.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpDiaPermiso.Location = New System.Drawing.Point(455, 140)
-        Me.dtpDiaPermiso.Name = "dtpDiaPermiso"
-        Me.dtpDiaPermiso.Size = New System.Drawing.Size(100, 20)
-        Me.dtpDiaPermiso.TabIndex = 8
+        Me.dtpFechaHasta.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpFechaHasta.Location = New System.Drawing.Point(254, 175)
+        Me.dtpFechaHasta.Name = "dtpFechaHasta"
+        Me.dtpFechaHasta.Size = New System.Drawing.Size(97, 20)
+        Me.dtpFechaHasta.TabIndex = 8
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(371, 147)
+        Me.Label5.Location = New System.Drawing.Point(179, 175)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(63, 13)
+        Me.Label5.Size = New System.Drawing.Size(66, 13)
         Me.Label5.TabIndex = 9
-        Me.Label5.Text = "Dia Permiso"
-        '
-        'numHoras
-        '
-        Me.numHoras.Location = New System.Drawing.Point(679, 139)
-        Me.numHoras.Maximum = New Decimal(New Integer() {24, 0, 0, 0})
-        Me.numHoras.Name = "numHoras"
-        Me.numHoras.Size = New System.Drawing.Size(69, 20)
-        Me.numHoras.TabIndex = 10
-        Me.numHoras.Value = New Decimal(New Integer() {1, 0, 0, 0})
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(584, 146)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(75, 13)
-        Me.Label6.TabIndex = 11
-        Me.Label6.Text = "Numero Horas"
+        Me.Label5.Text = "Fecha hasta"
         '
         'rbConSueldo
         '
         Me.rbConSueldo.AutoSize = True
-        Me.rbConSueldo.Location = New System.Drawing.Point(793, 127)
+        Me.rbConSueldo.Location = New System.Drawing.Point(26, 23)
         Me.rbConSueldo.Name = "rbConSueldo"
         Me.rbConSueldo.Size = New System.Drawing.Size(80, 17)
         Me.rbConSueldo.TabIndex = 12
@@ -183,7 +170,7 @@ Partial Class Form1
         'rbSinSueldo
         '
         Me.rbSinSueldo.AutoSize = True
-        Me.rbSinSueldo.Location = New System.Drawing.Point(793, 150)
+        Me.rbSinSueldo.Location = New System.Drawing.Point(26, 56)
         Me.rbSinSueldo.Name = "rbSinSueldo"
         Me.rbSinSueldo.Size = New System.Drawing.Size(76, 17)
         Me.rbSinSueldo.TabIndex = 13
@@ -193,7 +180,7 @@ Partial Class Form1
         '
         'btnGuardar
         '
-        Me.btnGuardar.Location = New System.Drawing.Point(213, 182)
+        Me.btnGuardar.Location = New System.Drawing.Point(809, 159)
         Me.btnGuardar.Name = "btnGuardar"
         Me.btnGuardar.Size = New System.Drawing.Size(75, 23)
         Me.btnGuardar.TabIndex = 14
@@ -202,7 +189,7 @@ Partial Class Form1
         '
         'btnReporte
         '
-        Me.btnReporte.Location = New System.Drawing.Point(394, 182)
+        Me.btnReporte.Location = New System.Drawing.Point(789, 397)
         Me.btnReporte.Name = "btnReporte"
         Me.btnReporte.Size = New System.Drawing.Size(75, 23)
         Me.btnReporte.TabIndex = 15
@@ -211,7 +198,7 @@ Partial Class Form1
         '
         'btnLimpiar
         '
-        Me.btnLimpiar.Location = New System.Drawing.Point(584, 182)
+        Me.btnLimpiar.Location = New System.Drawing.Point(689, 159)
         Me.btnLimpiar.Name = "btnLimpiar"
         Me.btnLimpiar.Size = New System.Drawing.Size(75, 23)
         Me.btnLimpiar.TabIndex = 16
@@ -223,7 +210,7 @@ Partial Class Form1
         Me.dgvPermisos.AllowUserToOrderColumns = True
         Me.dgvPermisos.AutoGenerateColumns = False
         Me.dgvPermisos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvPermisos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8})
+        Me.dgvPermisos.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8, Me.Column9})
         Me.dgvPermisos.DataSource = Me.SistemapermisosDataSetBindingSource
         Me.dgvPermisos.Location = New System.Drawing.Point(12, 228)
         Me.dgvPermisos.Name = "dgvPermisos"
@@ -357,11 +344,72 @@ Partial Class Form1
         Me.Label9.TabIndex = 25
         Me.Label9.Text = "Gestor de Permisos"
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.rbMediaJornadaPM)
+        Me.GroupBox1.Controls.Add(Me.rbMediaJornadaAM)
+        Me.GroupBox1.Controls.Add(Me.rbJornadaCompleta)
+        Me.GroupBox1.Location = New System.Drawing.Point(385, 116)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(128, 95)
+        Me.GroupBox1.TabIndex = 26
+        Me.GroupBox1.TabStop = False
+        '
+        'rbMediaJornadaPM
+        '
+        Me.rbMediaJornadaPM.AutoSize = True
+        Me.rbMediaJornadaPM.Location = New System.Drawing.Point(6, 72)
+        Me.rbMediaJornadaPM.Name = "rbMediaJornadaPM"
+        Me.rbMediaJornadaPM.Size = New System.Drawing.Size(114, 17)
+        Me.rbMediaJornadaPM.TabIndex = 2
+        Me.rbMediaJornadaPM.TabStop = True
+        Me.rbMediaJornadaPM.Text = "Media Jornada PM"
+        Me.rbMediaJornadaPM.UseVisualStyleBackColor = True
+        '
+        'rbMediaJornadaAM
+        '
+        Me.rbMediaJornadaAM.AutoSize = True
+        Me.rbMediaJornadaAM.Location = New System.Drawing.Point(7, 49)
+        Me.rbMediaJornadaAM.Name = "rbMediaJornadaAM"
+        Me.rbMediaJornadaAM.Size = New System.Drawing.Size(114, 17)
+        Me.rbMediaJornadaAM.TabIndex = 1
+        Me.rbMediaJornadaAM.TabStop = True
+        Me.rbMediaJornadaAM.Text = "Media Jornada AM"
+        Me.rbMediaJornadaAM.UseVisualStyleBackColor = True
+        '
+        'rbJornadaCompleta
+        '
+        Me.rbJornadaCompleta.AutoSize = True
+        Me.rbJornadaCompleta.Location = New System.Drawing.Point(7, 23)
+        Me.rbJornadaCompleta.Name = "rbJornadaCompleta"
+        Me.rbJornadaCompleta.Size = New System.Drawing.Size(110, 17)
+        Me.rbJornadaCompleta.TabIndex = 0
+        Me.rbJornadaCompleta.TabStop = True
+        Me.rbJornadaCompleta.Text = "Jornada Completa"
+        Me.rbJornadaCompleta.UseVisualStyleBackColor = True
+        '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.rbConSueldo)
+        Me.GroupBox2.Controls.Add(Me.rbSinSueldo)
+        Me.GroupBox2.Location = New System.Drawing.Point(524, 116)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(135, 95)
+        Me.GroupBox2.TabIndex = 27
+        Me.GroupBox2.TabStop = False
+        '
+        'Column9
+        '
+        Me.Column9.HeaderText = "Column9"
+        Me.Column9.Name = "Column9"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(917, 439)
+        Me.Controls.Add(Me.GroupBox2)
+        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.rbMensual)
@@ -374,14 +422,10 @@ Partial Class Form1
         Me.Controls.Add(Me.btnLimpiar)
         Me.Controls.Add(Me.btnReporte)
         Me.Controls.Add(Me.btnGuardar)
-        Me.Controls.Add(Me.rbSinSueldo)
-        Me.Controls.Add(Me.rbConSueldo)
-        Me.Controls.Add(Me.Label6)
-        Me.Controls.Add(Me.numHoras)
         Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.dtpDiaPermiso)
+        Me.Controls.Add(Me.dtpFechaHasta)
         Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.dtpDiaActual)
+        Me.Controls.Add(Me.dtpFechaDesde)
         Me.Controls.Add(Me.txtFuncion)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
@@ -390,11 +434,14 @@ Partial Class Form1
         Me.Controls.Add(Me.Label1)
         Me.Name = "Form1"
         Me.Text = "Form1"
-        CType(Me.numHoras, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgvPermisos, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.SistemapermisosDataSetBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.SistemapermisosDataSet, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -406,12 +453,10 @@ Partial Class Form1
     Friend WithEvents Label2 As Label
     Friend WithEvents Label3 As Label
     Friend WithEvents txtFuncion As TextBox
-    Friend WithEvents dtpDiaActual As DateTimePicker
+    Friend WithEvents dtpFechaDesde As DateTimePicker
     Friend WithEvents Label4 As Label
-    Friend WithEvents dtpDiaPermiso As DateTimePicker
+    Friend WithEvents dtpFechaHasta As DateTimePicker
     Friend WithEvents Label5 As Label
-    Friend WithEvents numHoras As NumericUpDown
-    Friend WithEvents Label6 As Label
     Friend WithEvents rbConSueldo As RadioButton
     Friend WithEvents rbSinSueldo As RadioButton
     Friend WithEvents btnGuardar As Button
@@ -436,4 +481,10 @@ Partial Class Form1
     Friend WithEvents Column8 As DataGridViewTextBoxColumn
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents Label9 As Label
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents rbMediaJornadaAM As RadioButton
+    Friend WithEvents rbJornadaCompleta As RadioButton
+    Friend WithEvents rbMediaJornadaPM As RadioButton
+    Friend WithEvents GroupBox2 As GroupBox
+    Friend WithEvents Column9 As DataGridViewTextBoxColumn
 End Class

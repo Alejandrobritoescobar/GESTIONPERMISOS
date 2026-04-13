@@ -92,9 +92,7 @@ Public Class Form1
         AppDomain.CurrentDomain.SetData("DataDirectory", Application.StartupPath)
 
         Try
-            ' Leer cadena de conexión maestra del archivo App.config
             connectionString = ConfigurationManager.ConnectionStrings("SistemaPermisosConnectionString").ConnectionString
-
             ConfigurarConexion()
             CargarEmpleados()
             ConfigurarFormulario()
@@ -120,21 +118,29 @@ Public Class Form1
             conn.Open()
             conn.Close()
         End Using
-
-        ' ✅ Diagnóstico opcional en consola (solo desarrollo)
         Console.WriteLine($"[BD] Conexión OK - {ObtenerDiagnosticoArquitectura()}")
     End Sub
 
     Private Sub ConfigurarFormulario()
-        dtpDiaActual.Value = Date.Today
-        dtpDiaPermiso.Value = Date.Today
-        numHoras.Minimum = 1
-        numHoras.Maximum = 24
-        numHoras.Value = 1
+        dtpFechaDesde.Value = Date.Today
+
+        ' ── Rango de fechas del permiso ──
+        dtpFechaDesde.Value = Date.Today
+        dtpFechaHasta.Value = Date.Today
+
+        ' ── Duración de jornada ──
+        ' Se asume que en el formulario existen tres RadioButtons:
+        '   rbJornadaCompleta, rbMediaJornadaAM, rbMediaJornadadPM
+        rbJornadaCompleta.Checked = True
+
+        ' ── Tipo de pago (Con/Sin sueldo) ──
         rbConSueldo.Checked = True
         rbSinSueldo.Checked = False
+
+        ' ── Campos de solo lectura ──
         txtRUT.ReadOnly = True
         txtFuncion.ReadOnly = True
+
         ConfigurarDataGridView()
     End Sub
 
@@ -145,9 +151,10 @@ Public Class Form1
         dgvPermisos.Columns.Add("Nombre", "Nombre")
         dgvPermisos.Columns.Add("RUT", "RUT")
         dgvPermisos.Columns.Add("Funcion", "Función")
-        dgvPermisos.Columns.Add("DiaPermiso", "Fecha Permiso")
-        dgvPermisos.Columns.Add("Horas", "Horas")
-        dgvPermisos.Columns.Add("Tipo", "Tipo")
+        dgvPermisos.Columns.Add("FechaDesde", "Fecha Desde")
+        dgvPermisos.Columns.Add("FechaHasta", "Fecha Hasta")
+        dgvPermisos.Columns.Add("Duracion", "Duración")
+        dgvPermisos.Columns.Add("Tipo", "Tipo Permiso")
         dgvPermisos.Columns.Add("FechaRegistro", "Fecha Registro")
         dgvPermisos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
     End Sub
@@ -157,17 +164,14 @@ Public Class Form1
             Using conn As New OleDb.OleDbConnection(connectionString)
                 conn.Open()
                 Dim sql As String = "SELECT ID_Empleado, Nombre, RUT, Funcion FROM Empleados WHERE Estado = True ORDER BY Nombre"
-
                 Using cmd As New OleDb.OleDbCommand(sql, conn)
                     Using reader As OleDb.OleDbDataReader = cmd.ExecuteReader()
                         cmbEmpleados.Items.Clear()
                         cmbEmpleados.Items.Add("-- Seleccione Empleado --")
-
                         While reader.Read()
                             Dim item As New ListItem(reader("Nombre").ToString(), reader("ID_Empleado").ToString())
                             cmbEmpleados.Items.Add(item)
                         End While
-
                         cmbEmpleados.SelectedIndex = 0
                     End Using
                 End Using
@@ -197,7 +201,7 @@ Public Class Form1
         Else
             LimpiarDatosEmpleado()
         End If
-        CargarPermisos() ' Actualizar tabla al cambiar selección
+        CargarPermisos()
     End Sub
 
     Private Sub CargarDatosEmpleado(idEmpleado As Integer)
@@ -226,41 +230,70 @@ Public Class Form1
         empleadoSeleccionado = 0
     End Sub
 
+    ' ──────────────────────────────────────────
+    ' Devuelve la etiqueta de duración seleccionada
+    ' ──────────────────────────────────────────
+    Private Function ObtenerDuracionSeleccionada() As String
+        If rbJornadaCompleta.Checked Then Return "Jornada Completa"
+        If rbMediaJornadaAM.Checked Then Return "Media Jornada AM"
+        If rbMediaJornadaPM.Checked Then Return "Media Jornada PM"
+        Return ""
+    End Function
+
     Private Sub btnGuardar_Click(sender As Object, e As EventArgs) Handles btnGuardar.Click
+        ' ── Validaciones ──
         If empleadoSeleccionado = 0 Then
             MessageBox.Show("Por favor seleccione un empleado.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-        If Not rbConSueldo.Checked And Not rbSinSueldo.Checked Then
+
+        If Not rbConSueldo.Checked AndAlso Not rbSinSueldo.Checked Then
             MessageBox.Show("Por favor seleccione el tipo de permiso (Con o Sin Sueldo).", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-        If numHoras.Value <= 0 Then
-            MessageBox.Show("Las horas deben ser mayores a 0.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+
+        If Not rbJornadaCompleta.Checked AndAlso Not rbMediaJornadaAM.Checked AndAlso Not rbMediaJornadaPM.Checked Then
+            MessageBox.Show("Por favor seleccione la duración del permiso (Jornada Completa, Media Jornada AM o Media Jornada PM).", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
+
+        If dtpFechaHasta.Value.Date < dtpFechaDesde.Value.Date Then
+            MessageBox.Show("La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        Dim duracion As String = ObtenerDuracionSeleccionada()
 
         Try
             Using conn As New OleDb.OleDbConnection(connectionString)
                 conn.Open()
-                Dim sql As String = "INSERT INTO Permisos (ID_Empleado, Nombre, RUT, Funcion, DiaActual, DiaPermiso, HorasPermiso, ConSueldo, SinSueldo, FechaRegistro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+
+                ' ── INSERT actualizado: FechaDesde + FechaHasta + Duracion en lugar de DiaPermiso + HorasPermiso ──
+                Dim sql As String =
+                    "INSERT INTO Permisos " &
+                    "(ID_Empleado, Nombre, RUT, Funcion, DiaActual, FechaDesde, FechaHasta, Duracion, ConSueldo, SinSueldo, FechaRegistro) " &
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+
                 Using cmd As New OleDb.OleDbCommand(sql, conn)
                     cmd.Parameters.Add("@ID_Empleado", OleDb.OleDbType.Integer).Value = empleadoSeleccionado
                     cmd.Parameters.Add("@Nombre", OleDb.OleDbType.VarWChar).Value = cmbEmpleados.SelectedItem.ToString()
                     cmd.Parameters.Add("@RUT", OleDb.OleDbType.VarWChar).Value = txtRUT.Text
                     cmd.Parameters.Add("@Funcion", OleDb.OleDbType.VarWChar).Value = txtFuncion.Text
-                    cmd.Parameters.Add("@DiaActual", OleDb.OleDbType.Date).Value = dtpDiaActual.Value
-                    cmd.Parameters.Add("@DiaPermiso", OleDb.OleDbType.Date).Value = dtpDiaPermiso.Value
-                    cmd.Parameters.Add("@HorasPermiso", OleDb.OleDbType.Integer).Value = CInt(numHoras.Value)
+                    cmd.Parameters.Add("@DiaActual", OleDb.OleDbType.Date).Value = dtpFechaDesde.Value
+                    cmd.Parameters.Add("@FechaDesde", OleDb.OleDbType.Date).Value = dtpFechaDesde.Value.Date
+                    cmd.Parameters.Add("@FechaHasta", OleDb.OleDbType.Date).Value = dtpFechaHasta.Value.Date
+                    cmd.Parameters.Add("@Duracion", OleDb.OleDbType.VarWChar).Value = duracion
                     cmd.Parameters.Add("@ConSueldo", OleDb.OleDbType.Boolean).Value = rbConSueldo.Checked
                     cmd.Parameters.Add("@SinSueldo", OleDb.OleDbType.Boolean).Value = rbSinSueldo.Checked
                     cmd.Parameters.Add("@FechaRegistro", OleDb.OleDbType.Date).Value = Date.Now
                     cmd.ExecuteNonQuery()
                 End Using
             End Using
+
             MessageBox.Show("Permiso guardado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LimpiarFormulario()
             CargarPermisos()
+
         Catch ex As Exception
             MessageBox.Show("Error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -275,32 +308,32 @@ Public Class Form1
 
             Using conn As New OleDb.OleDbConnection(connectionString)
                 conn.Open()
-                Dim sql As String = "SELECT ID_Permiso, Nombre, RUT, Funcion, DiaPermiso, HorasPermiso, ConSueldo, SinSueldo, FechaRegistro FROM Permisos WHERE ID_Empleado = ? ORDER BY FechaRegistro DESC"
+                Dim sql As String =
+                    "SELECT ID_Permiso, Nombre, RUT, Funcion, FechaDesde, FechaHasta, Duracion, ConSueldo, SinSueldo, FechaRegistro " &
+                    "FROM Permisos WHERE ID_Empleado = ? ORDER BY FechaRegistro DESC"
+
                 Using cmd As New OleDb.OleDbCommand(sql, conn)
                     cmd.Parameters.Add("@ID_Empleado", OleDb.OleDbType.Integer).Value = empleadoSeleccionado
                     Using reader As OleDb.OleDbDataReader = cmd.ExecuteReader()
                         dgvPermisos.Rows.Clear()
                         While reader.Read()
-                            Dim tipo As String = ""
-                            If CBool(reader("ConSueldo")) Then
-                                tipo = "Con Sueldo"
-                            Else
-                                tipo = "Sin Sueldo"
-                            End If
+                            Dim tipoPago As String = If(CBool(reader("ConSueldo")), "Con Sueldo", "Sin Sueldo")
                             dgvPermisos.Rows.Add(
                                 reader("ID_Permiso").ToString(),
                                 reader("Nombre").ToString(),
                                 reader("RUT").ToString(),
                                 reader("Funcion").ToString(),
-                                CDate(reader("DiaPermiso")).ToString("dd/MM/yyyy"),
-                                reader("HorasPermiso").ToString(),
-                                tipo,
+                                CDate(reader("FechaDesde")).ToString("dd/MM/yyyy"),
+                                CDate(reader("FechaHasta")).ToString("dd/MM/yyyy"),
+                                reader("Duracion").ToString(),
+                                tipoPago,
                                 CDate(reader("FechaRegistro")).ToString("dd/MM/yyyy HH:mm")
                             )
                         End While
                     End Using
                 End Using
             End Using
+
         Catch ex As Exception
             MessageBox.Show("Error al cargar permisos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -313,48 +346,45 @@ Public Class Form1
     Private Sub GenerarReporte()
         Try
             Dim fechaDesde As Date = dtpDesde.Value.Date
-            Dim fechaHasta As Date = dtpHasta.Value.Date
-
-            ' Ajustar la variable "Hasta" para que acabe en el último segundo del día
-            ' Así la consulta BETWEEN abarcará todos los registros generados hoy mismo
-            fechaHasta = fechaHasta.AddHours(23).AddMinutes(59).AddSeconds(59)
+            Dim fechaHasta As Date = dtpHasta.Value.Date.AddHours(23).AddMinutes(59).AddSeconds(59)
 
             Using conn As New OleDb.OleDbConnection(connectionString)
                 conn.Open()
-                Dim sql As String = "SELECT Nombre, RUT, Funcion, DiaPermiso, HorasPermiso, ConSueldo, SinSueldo, FechaRegistro " &
-                                   "FROM Permisos WHERE FechaRegistro BETWEEN ? AND ? ORDER BY Nombre, FechaRegistro"
+                Dim sql As String =
+                    "SELECT Nombre, RUT, Funcion, FechaDesde, FechaHasta, Duracion, ConSueldo, SinSueldo, FechaRegistro " &
+                    "FROM Permisos WHERE FechaRegistro BETWEEN ? AND ? ORDER BY Nombre, FechaRegistro"
+
                 Using cmd As New OleDb.OleDbCommand(sql, conn)
                     cmd.Parameters.Add("@Desde", OleDb.OleDbType.DBTimeStamp).Value = fechaDesde
                     cmd.Parameters.Add("@Hasta", OleDb.OleDbType.DBTimeStamp).Value = fechaHasta
+
                     Using reader As OleDb.OleDbDataReader = cmd.ExecuteReader()
                         Dim frmReporte As New Form()
-                        frmReporte.Text = "Reporte de Permisos (" & fechaDesde.ToString("dd/MM/yyyy") & " - " & fechaHasta.ToString("dd/MM/yyyy") & ")"
-                        frmReporte.Size = New Size(900, 600)
+                        frmReporte.Text = "Reporte de Permisos (" & fechaDesde.ToString("dd/MM/yyyy") & " - " & dtpHasta.Value.Date.ToString("dd/MM/yyyy") & ")"
+                        frmReporte.Size = New Size(1000, 600)
+
                         Dim dgvReporte As New DataGridView()
                         dgvReporte.Dock = DockStyle.Fill
                         dgvReporte.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
                         dgvReporte.Columns.Add("Nombre", "Nombre")
                         dgvReporte.Columns.Add("RUT", "RUT")
                         dgvReporte.Columns.Add("Funcion", "Función")
-                        dgvReporte.Columns.Add("DiaPermiso", "Fecha Permiso")
-                        dgvReporte.Columns.Add("Horas", "Horas")
-                        dgvReporte.Columns.Add("Tipo", "Tipo")
+                        dgvReporte.Columns.Add("FechaDesde", "Fecha Desde")
+                        dgvReporte.Columns.Add("FechaHasta", "Fecha Hasta")
+                        dgvReporte.Columns.Add("Duracion", "Duración")
+                        dgvReporte.Columns.Add("Tipo", "Tipo Permiso")
                         dgvReporte.Columns.Add("FechaRegistro", "Fecha Registro")
 
                         While reader.Read()
-                            Dim tipo As String = ""
-                            If CBool(reader("ConSueldo")) Then
-                                tipo = "Con Sueldo"
-                            Else
-                                tipo = "Sin Sueldo"
-                            End If
+                            Dim tipoPago As String = If(CBool(reader("ConSueldo")), "Con Sueldo", "Sin Sueldo")
                             dgvReporte.Rows.Add(
                                 reader("Nombre").ToString(),
                                 reader("RUT").ToString(),
                                 reader("Funcion").ToString(),
-                                CDate(reader("DiaPermiso")).ToString("dd/MM/yyyy"),
-                                reader("HorasPermiso").ToString(),
-                                tipo,
+                                CDate(reader("FechaDesde")).ToString("dd/MM/yyyy"),
+                                CDate(reader("FechaHasta")).ToString("dd/MM/yyyy"),
+                                reader("Duracion").ToString(),
+                                tipoPago,
                                 CDate(reader("FechaRegistro")).ToString("dd/MM/yyyy HH:mm")
                             )
                         End While
@@ -378,13 +408,13 @@ Public Class Form1
 
                         pnlBotones.Controls.Add(btnExportar)
                         pnlBotones.Controls.Add(btnImprimir)
-
                         frmReporte.Controls.Add(dgvReporte)
                         frmReporte.Controls.Add(pnlBotones)
                         frmReporte.ShowDialog()
                     End Using
                 End Using
             End Using
+
         Catch ex As Exception
             MessageBox.Show("Error al generar reporte: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -477,9 +507,10 @@ Public Class Form1
         cmbEmpleados.SelectedIndex = 0
         txtRUT.Clear()
         txtFuncion.Clear()
-        dtpDiaActual.Value = Date.Today
-        dtpDiaPermiso.Value = Date.Today
-        numHoras.Value = 1
+        dtpFechaDesde.Value = Date.Today
+        dtpFechaDesde.Value = Date.Today
+        dtpFechaHasta.Value = Date.Today
+        rbJornadaCompleta.Checked = True
         rbConSueldo.Checked = True
         rbSinSueldo.Checked = False
         cmbEmpleados.Focus()
@@ -541,25 +572,19 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' ✅ Diagnóstico en título solo en modo Debug
 #If DEBUG Then
         Me.Text &= $" [{ObtenerDiagnosticoArquitectura()}]"
 #End If
         CargarPermisos()
-
-        ' Iniciar temporizador de sincronización multi-usuario (5 segundos)
         timerActualizacion.Interval = 5000
         timerActualizacion.Start()
     End Sub
 
     Private Sub timerActualizacion_Tick(sender As Object, e As EventArgs) Handles timerActualizacion.Tick
-        ' Evitar actualizar si hay ventanas modales abiertas
         If Application.OpenForms.Count <= 1 Then
             Dim indexScroll As Integer = -1
             If dgvPermisos.Rows.Count > 0 Then indexScroll = dgvPermisos.FirstDisplayedScrollingRowIndex
-            
             CargarPermisos()
-            
             If indexScroll >= 0 AndAlso indexScroll < dgvPermisos.Rows.Count Then
                 dgvPermisos.FirstDisplayedScrollingRowIndex = indexScroll
             End If
@@ -567,5 +592,9 @@ Public Class Form1
     End Sub
 
     Private Sub txtFuncion_TextChanged(sender As Object, e As EventArgs) Handles txtFuncion.TextChanged
+    End Sub
+
+    Private Sub dgvPermisos_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvPermisos.CellContentClick
+
     End Sub
 End Class
